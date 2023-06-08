@@ -62,9 +62,6 @@ climate::ClimateTraits HaierClimate::traits() {
   traits.set_visual_max_temperature(MAX_VALID_TEMPERATURE);
   traits.set_visual_temperature_step(TEMPERATURE_STEP);
 
-  traits.set_supported_modes({climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT_COOL, climate::CLIMATE_MODE_COOL,
-                              climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_DRY});
-
   traits.set_supported_fan_modes({
       climate::CLIMATE_FAN_AUTO,
       climate::CLIMATE_FAN_LOW,
@@ -74,6 +71,7 @@ climate::ClimateTraits HaierClimate::traits() {
 
   traits.set_supported_swing_modes(this->supported_swing_modes_);
   traits.set_supported_presets(this->supported_presets_);
+  traits.set_supported_modes(this->supported_modes_);
   traits.set_supports_current_temperature(true);
   traits.set_supports_two_point_target_temperature(false);
 

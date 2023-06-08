@@ -2,9 +2,8 @@ from esphome.components import climate
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import uart
-from esphome.components.climate import ClimateSwingMode
-from esphome.components.climate import ClimatePreset
-from esphome.const import CONF_ID, CONF_SUPPORTED_SWING_MODES, CONF_SUPPORTED_PRESETS
+from esphome.components.climate import ClimateSwingMode, ClimatePreset, ClimateMode
+from esphome.const import CONF_ID, CONF_SUPPORTED_SWING_MODES, CONF_SUPPORTED_PRESETS, CONF_SUPPORTED_MODES
 
 DEPENDENCIES = ["uart"]
 
@@ -25,8 +24,18 @@ ALLOWED_CLIMATE_PRESETS = {
     "COMFORT": ClimatePreset.CLIMATE_PRESET_COMFORT,
 }
 
+ALLOWED_CLIMATE_MODE = {
+    "OFF": ClimateMode.CLIMATE_MODE_OFF,
+    "HEAT_COOL": ClimateMode.CLIMATE_MODE_HEAT_COOL,
+    "COOL": ClimateMode.CLIMATE_MODE_COOL,
+    "HEAT": ClimateMode.CLIMATE_MODE_HEAT,
+    "DRY": ClimateMode.CLIMATE_MODE_DRY,
+    "FAN_ONLY": ClimateMode.CLIMATE_MODE_FAN_ONLY,
+}
+
 validate_swing_modes = cv.enum(ALLOWED_CLIMATE_SWING_MODES, upper=True)
 validate_presets = cv.enum(ALLOWED_CLIMATE_PRESETS, upper=True)
+validate_modes = cv.enum(ALLOWED_CLIMATE_MODE, upper=True)
 
 CONFIG_SCHEMA = cv.All(
     climate.CLIMATE_SCHEMA.extend(
@@ -37,6 +46,9 @@ CONFIG_SCHEMA = cv.All(
             ),
             cv.Optional(CONF_SUPPORTED_PRESETS): cv.ensure_list(
                 validate_presets
+            ),
+            cv.Optional(CONF_SUPPORTED_MODES): cv.ensure_list(
+                validate_modes
             ),
         }
     )
@@ -54,3 +66,7 @@ async def to_code(config):
         cg.add(var.set_supported_swing_modes(config[CONF_SUPPORTED_SWING_MODES]))
     if CONF_SUPPORTED_PRESETS in config:
         cg.add(var.set_supported_presets(config[CONF_SUPPORTED_PRESETS]))
+    if CONF_SUPPORTED_MODES in config:
+        cg.add(var.set_supported_modes(config[CONF_SUPPORTED_MODES]))
+    else:
+        cg.add(var.set_def_modes())

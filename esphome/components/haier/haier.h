@@ -23,6 +23,13 @@ class HaierClimate : public climate::Climate, public uart::UARTDevice, public Po
   void set_supported_presets(const std::set<climate::ClimatePreset> &presets) {
     this->supported_presets_ = presets;
   }
+  void set_supported_modes(const std::set<climate::ClimateMode> &modes) {
+    this->supported_modes_ = modes;
+  }
+  void set_def_modes() {
+    this->supported_modes_ = {climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT_COOL, climate::CLIMATE_MODE_COOL,
+                              climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_DRY};
+  }
 
  protected:
   climate::ClimateTraits traits() override;
@@ -35,6 +42,7 @@ class HaierClimate : public climate::Climate, public uart::UARTDevice, public Po
   uint8_t data_[37];
   std::set<climate::ClimateSwingMode> supported_swing_modes_{};
   std::set<climate::ClimatePreset> supported_presets_{};
+  std::set<climate::ClimateMode> supported_modes_{};
 };
 
 }  // namespace haier
